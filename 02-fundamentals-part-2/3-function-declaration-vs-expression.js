@@ -33,5 +33,3 @@ function calcAge3(birthYear) {
 }
 
 // which one to use : depends on personal preferences. to make code more structured use function expression
-
-
