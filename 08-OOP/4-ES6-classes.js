@@ -18,6 +18,8 @@ class Person {
     }
 
     // you can create methods inside class here. All methods outside of the constructor will be in prototype and not in objects
+
+    // instance methods
     calcAge() {
         console.log(2022 - this.birthYear);
     }
@@ -29,6 +31,12 @@ class Person {
     // getters and setters : for explanation see file 5-setters-and-getters.js
     get age() {
         return 2022 - this.birthYear;
+    }
+
+    // static method
+    static hey() {
+        console.log('hey there 👋👋');
+        console.log(this);
     }
 }
 
