@@ -25,6 +25,11 @@ class Person {
     greet() {
         console.log(`hey ${this.firstName}`);
     }
+
+    // getters and setters : for explanation see file 5-setters-and-getters.js
+    get age() {
+        return 2022 - this.birthYear;
+    }
 }
 
 // creating object
@@ -41,6 +46,7 @@ Person.prototype.greet = function () {
 };
  */
 gagan.greet();
+console.log(gagan.age);
 
 // Important notes about classes:
 // 1. classes are not hoisted.
