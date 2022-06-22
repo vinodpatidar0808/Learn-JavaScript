@@ -18,6 +18,7 @@ const request = fetch('https://restcountries.com/v3.1/name/bharat');
 console.log(request);
 
 // CONSUMING PROMISES
+/* 
 const getCountryData = function (country) {
     // fetch will return a promise and on each promise we can call then method to consume that promise,
     // then expects a callback function which will be executed as soon as the promise is fulfilled/ result available
@@ -34,5 +35,66 @@ const getCountryData = function (country) {
             console.log(data);
         });
 };
+ */
 
+const btn = document.querySelector('.btn-country');
+const countriesContainer = document.querySelector('.countries');
+
+///////////////////////////////////////
+
+const renderCountry = (data, className = '') => {
+    // console.log(data);
+    const [currencyCode] = Object.keys(data.currencies);
+
+    const getLanguages = langs => {
+        // console.log(langs);
+        let languages = '';
+        for (const key of Object.keys(langs)) {
+            languages += `${langs[key]}, `;
+        }
+        return languages.trim().slice(0, -1);
+    };
+
+    const htmlEl = `
+    <article class="country ${className}">
+    <img class="country__img" src="${data.flags.png}" />
+    <div class="country__data">
+    <h3 class="country__name">${data.name.official} (${data.name.common})
+    </h3>
+            <h4 class="country__region">${data.region}</h4>
+            <p class="country__row"><span>👫</span>${(
+                +data.population / 1000000
+            ).toFixed(1)} Million people</p>
+                <p class="country__row"><span>🗣️</span>${getLanguages(
+                    data.languages
+                )}</p>
+                    <p class="country__row"><span>💰</span>${
+                        data.currencies[currencyCode].name
+                    }</p>
+                    </div>
+                    </article>`;
+    countriesContainer.insertAdjacentHTML('beforeend', htmlEl);
+    countriesContainer.style.opacity = 1;
+};
+
+// CHAINING PROMISES->
+// shorter way using arrow functions
+//NOTE: then method always returns a promise no matter whether we return anything or not
+const getCountryData = function (country) {
+    fetch(`https://restcountries.com/v3.1/name/${country}`)
+        .then(response => response.json())
+        .then(data => {
+            renderCountry(data[0]);
+            const neighbour = data[0].borders?.[0];
+            console.log(neighbour);
+            if (!neighbour) return;
+            // neighbour country
+            // here you return promise, you can work with that promise in the chain using then. this will become fulfilled value of previous promise
+            // don't chain then method after this fetch else this also becomes callback hell
+            return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+        })
+        .then(response => response.json())
+        .then(data2 => renderCountry(data2[0], 'neighbour'));
+};
 getCountryData('bharat');
+getCountryData('usa');
