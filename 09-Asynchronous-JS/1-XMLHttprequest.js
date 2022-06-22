@@ -56,3 +56,6 @@ const getCountryData = function (country) {
 // all the request works simultaneously behind the scene, but we will get data in order of function calls, if you want to have something done once you get response of request then you have to chain requests
 getCountryData('bharat');
 getCountryData('usa');
+
+
+
