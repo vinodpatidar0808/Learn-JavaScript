@@ -13,9 +13,11 @@ request.addEventListener('load', function ( {
 // NOTE: ES6 and promises way of doing above stuff
 
 // you can pass and Object of options for more options like method, contentheader etc, but for simple get request just fetch('url;)
-const request = fetch('https://restcountries.com/v3.1/name/bharat');
+// const request = fetch('https://restcountries.com/v3.1/name/bharat');
 // this fetch function returns a promise:  what is a promise and what it does for us :: read notes
-console.log(request);
+// console.log(request);
+
+// NOTE: besides than and catch you also have finally method available with each promise
 
 // CONSUMING PROMISES
 /* 
@@ -41,6 +43,11 @@ const btn = document.querySelector('.btn-country');
 const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
+const renderError = function (msg) {
+    countriesContainer.insertAdjacentText('beforeend', msg);
+    // shifted to finally method
+    // countriesContainer.style.opacity = 1;
+};
 
 const renderCountry = (data, className = '') => {
     // console.log(data);
@@ -74,7 +81,7 @@ const renderCountry = (data, className = '') => {
                     </div>
                     </article>`;
     countriesContainer.insertAdjacentHTML('beforeend', htmlEl);
-    countriesContainer.style.opacity = 1;
+    // countriesContainer.style.opacity = 1;
 };
 
 // CHAINING PROMISES->
@@ -82,7 +89,10 @@ const renderCountry = (data, className = '') => {
 //NOTE: then method always returns a promise no matter whether we return anything or not
 const getCountryData = function (country) {
     fetch(`https://restcountries.com/v3.1/name/${country}`)
-        .then(response => response.json())
+        .then(
+            response => response.json()
+            // err => alert(err)
+        )
         .then(data => {
             renderCountry(data[0]);
             const neighbour = data[0].borders?.[0];
@@ -93,8 +103,39 @@ const getCountryData = function (country) {
             // don't chain then method after this fetch else this also becomes callback hell
             return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
         })
-        .then(response => response.json())
-        .then(data2 => renderCountry(data2[0], 'neighbour'));
+        .then(
+            response => response.json()
+            // err => alert(err)
+        )
+        .then(
+            data2 => renderCountry(data2[0], 'neighbour')
+            // err => alert(err)
+        )
+        .catch(err => {
+            console.error(`${err} 💥💥💥`);
+            // every error produced by js contains a message property
+            renderError(
+                `Something went wrong 💥💥💥 ${err.message}. Try again! `
+            );
+        })
+        .finally(() => {
+            // generally we use finally method when we want something to happen irrespective of promise success or rejected
+            countriesContainer.style.opacity = 1;
+        });
+    //NOTE: console.error prints your custom error message on console
 };
-getCountryData('bharat');
-getCountryData('usa');
+
+// getCountryData('usa');
+
+//NOTE: Handling rejected PROMISES or handling errors
+// 2 ways to handle rejected promises : pass 2nd callback to then method, you have to add error callback for each promise to handle it's rejection.
+// then(successCallback, rejectionCallback)
+// 2nd way : handle rejections for all promises globally using catch
+// Errors propagate down the chain untill they get caught if they are not caugth they will throw error like uncaught rejected promises....
+// catch cannot catch 404 errors or similar kind of errors, so we need to handle them differently
+btn.addEventListener('click', function () {
+    getCountryData('bharat');
+});
+
+// something that won't be found on API
+getCountryData('gjkhsdjfkghjdfksghj');
