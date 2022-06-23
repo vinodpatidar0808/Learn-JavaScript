@@ -81,14 +81,45 @@ const whereAmI = async function () {
 
         console.log(data);
         renderCountry(data[0]);
+
+        // fulfilled value of the promise will be this string as we return it, if there is no error somewhere in the code above
+        return `You are in ${dataGeo.city}, ${dataGeo.country}`;
     } catch (err) {
         console.error(err);
         renderError(`Something went wrong ${err.message}`);
+
+        // to reject promise you have to manually throw error here again to propagate it down, you can throw new error or rethrow the same error
+        throw err;
     }
 };
-
-
-
-whereAmI();
-
 // NOTE: please never ignore handling errors in async code
+
+// returning values from async functions
+console.log('1: will get location');
+// async function returns  a promise, city will be a promise with pending status
+// const city = whereAmI();
+// to get value from promise you can use then method like this
+// even if there is error in whereAmI the promise will still be fulfilled, (try creating some random error) this then block will still run
+/*
+whereAmI()
+    .then(city => console.log(`2: ${city}`))
+    .catch(err => console.error(`2: ${err.message}`))
+    .finally(() => console.log('3: finished getting location'));
+console.log(city);
+console.log('2: finished loading location');
+*/
+
+// the above approach works but there is still problem here, we are mixing philosophy of async await with then catch, so you can do this stuff also using async await
+
+// you can use await only inside a async function not outside and not anywhere
+
+// IIFE: immediately invoked function execution
+(async function () {
+    try {
+        const city = await whereAmI();
+        console.log(`2: ${city}`);
+    } catch (err) {
+        console.log(`2: ${err.message} 💥`);
+    }
+    console.log(`3: finished getting location`);
+})();
