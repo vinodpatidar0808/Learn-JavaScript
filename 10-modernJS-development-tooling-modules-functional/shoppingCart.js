@@ -3,6 +3,11 @@
 
 console.log('exporting module');
 
+// Blocking code: importing module will let first finish it
+/* console.log('start fetching users');
+await fetch('https://jsonplaceholder.typicode.com/posts');
+console.log('finish fetching');
+ */
 // variable declared inside modules are module scoped
 // all variable are private here i.e you can not use them in importing module directly, you have to export them from here first
 const shippingCost = 10;
@@ -33,6 +38,5 @@ export default function (product, quantity) {
     cart.push({ product, quantity });
     console.log(`${quantity} ${product} added to the default cart`);
 }
-
 
 // export import are live connections: changes in exported module will be available in imported also
