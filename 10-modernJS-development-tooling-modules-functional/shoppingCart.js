@@ -1,3 +1,6 @@
+//NOTE: commented for parcel
+/* 
+
 // in module names it's a convention to use camelcase for file names
 // exporting module
 
@@ -7,7 +10,7 @@ console.log('exporting module');
 /* console.log('start fetching users');
 await fetch('https://jsonplaceholder.typicode.com/posts');
 console.log('finish fetching');
- */
+
 // variable declared inside modules are module scoped
 // all variable are private here i.e you can not use them in importing module directly, you have to export them from here first
 const shippingCost = 10;
@@ -40,3 +43,22 @@ export default function (product, quantity) {
 }
 
 // export import are live connections: changes in exported module will be available in imported also
+*/
+
+const shippingCost = 10;
+export const cart = [];
+
+export const addToCart = function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+};
+
+const totalPrice = 237;
+const totalQuantity = 23;
+
+export { totalPrice, totalQuantity as tq };
+
+export default function (product, quantity) {
+    cart.push({ product, quantity });
+    console.log(`${quantity} ${product} added to cart`);
+}

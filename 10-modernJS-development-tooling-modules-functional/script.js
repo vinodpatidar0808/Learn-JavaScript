@@ -29,6 +29,9 @@ console.log(shopping.totalPrice, shopping.tq);
 //  to import default and named export together
 // import add, {addToCart, totalPrice, tq} from './shoppingCart.js';
 
+// import cloneDeep from './node_modules/lodash-es/cloneDeep.js';
+// parcel allows to import like this
+// import cloneDeep from 'lodash';
 import add, { cart } from './shoppingCart.js';
 add('pizzas', 10);
 add('apples', 13);
